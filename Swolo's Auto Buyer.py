@@ -72,10 +72,10 @@ def autoBank(minTime, maxTime,repeated,usernameStr,passwordStr):
             goldString=(goldString[31:])
             goldString=goldString[:-19]
             goldString = goldString.replace(',', '')
-            amount2buy = (int(goldString)//50000)
+            amount2buy = (int(goldString)//450000)
 
             #navigating armory and purchasing weapons
-            purchaseField = browser.find_element_by_name('buy_weapon[23]')
+            purchaseField = browser.find_element_by_name('buy_weapon[72]')
             purchaseField.clear()
             purchaseField.send_keys(amount2buy)
             PurchaseButton = browser.find_element_by_name('buybut')
