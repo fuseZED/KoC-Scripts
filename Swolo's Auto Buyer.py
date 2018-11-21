@@ -4,8 +4,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import tkinter
 from tkinter import *
-
-
 from bs4 import BeautifulSoup
 import time
 import random
@@ -17,13 +15,12 @@ import random
                Time until next bank.
       Fix current sleep with loop.
 """
-
+"""gold/weapon purchase display:  in autoBank() loop create displayBox that outputs newString=oldString + [concatenation of amount2Buy, weapselect, goldString.]
+                                   Once that string is created its displayed in displaybox. It gets saved as oldString, next iteration is oldString+newString"""
     
 #unpacking user input from actuallyGrabbing()then running AutoBank()
 def grabInfo2(weapNumber,weapPricee):
     bankPref=CheckVar.get()
-    print(bankPref)
-    
     userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
     minTime=int(minTime)
     maxTime=int(maxTime)
@@ -59,9 +56,6 @@ def autoBank(minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,weapPrice
 
             #Sleep to make sure selenium doesnt break
             time.sleep(4)
-        
-
-
 
             #Navigating to armory
 
@@ -108,15 +102,27 @@ def autoBank(minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,weapPrice
 
             PurchaseButton = browser.find_element_by_name('buybut')
             PurchaseButton.click()
-            time.sleep(4000)
+            #Change this value to something real high when trouble shooting to avoid multiple logins.
+            time.sleep(4)
             
             browser.close()
            
             i=i+1
             #Random time range to perform banking
-            time.sleep(random.randrange(minTime,maxTime))
+            waitTime=random.randrange(minTime,maxTime)
+            print(waitTime / 60)
+            time.sleep(waitTime)
 
-#Evertyhing below this is UI
+
+##################################################################################            
+##################################################################################
+#################                                              ###################
+#################          Evertyhing below this is UI         ###################
+#################                                              ###################
+##################################################################################
+##################################################################################
+
+          
 master=Tk()
 master.title("Swolo's Auto Buyer")
 master.geometry("450x200")
@@ -140,16 +146,18 @@ maxBox = Entry(master)
 maxBox.grid(row=4,column=1) 
 timeBox=Entry(master)
 timeBox.grid(row=5, column=1)
+
+
 mb = Menubutton(master, text='Select Weapon to bank')
 mb.menu=Menu(mb)
 mb["menu"]=mb.menu
 mb.menu.add_command(label="Knife",command=lambda: grabInfo2(3,1000))
 mb.menu.add_command(label="Chariot",command=lambda: grabInfo2(72,450000))
-mb.menu.add_command(label="Black Powder Missile",command=lambda: grabInfo2(72,1000000))
-mb.menu.add_command(label="DragonSkin",command=lambda: grabInfo2(72,200000))
-mb.menu.add_command(label="Invisibility Shield",command=lambda: grabInfo2(72,1000000))
-mb.menu.add_command(label="Nunchuku",command=lambda: grabInfo2(72,1000000))
-mb.menu.add_command(label="Lookout Tower",command=lambda: grabInfo2(72,1000000))
+mb.menu.add_command(label="Black Powder Missile",command=lambda: grabInfo2(70,1000000))
+mb.menu.add_command(label="DragonSkin",command=lambda: grabInfo2(51,200000))
+mb.menu.add_command(label="Invisibility Shield",command=lambda: grabInfo2(71,1000000))
+mb.menu.add_command(label="Nunchaku",command=lambda: grabInfo2(75,1000000))
+mb.menu.add_command(label="Lookout Tower",command=lambda: grabInfo2(74,1000000))
 
 mb.grid(row=7,column=1)
 
