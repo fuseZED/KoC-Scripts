@@ -53,7 +53,6 @@ def autoBank(framed,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,we
             username.send_keys(usernameStr)
             
             password = browser.find_element_by_name('peeword')
-            
             password.send_keys(passwordStr)
             loginButton = browser.find_elements_by_class_name('login_input')
             loginButton[2].click()
@@ -103,7 +102,7 @@ def autoBank(framed,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,we
                     purchaseField = browser.find_element_by_name('buy_weapon['+str(weapNum)+']')
                     purchaseField.clear()
                     purchaseField.send_keys(amount2buy)
-                    newText="You Purchased: " + str(amount2buy) + ' weapons. With '+ goldString + ' gold. '
+                    newText="You Purchased: " + str(amount2buy) + ' weapons. With '+ goldString + ' gold. \n'
                     displayText= oldText+newText
                     Label(framed, fg='yellow', bg='black', text= displayText).place(x= 120, y = 175)
                     framed.update()
