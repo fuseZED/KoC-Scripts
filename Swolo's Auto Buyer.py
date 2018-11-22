@@ -31,7 +31,7 @@ def grabInfo2(weapNumber,weapPricee,frame):
     repeat=int(repeat)
     #Label(frame, fg='yellow', bg='black', text="this was minTime: " + str(minTime) ).place(x= 120, y = 175)
     
-    autoBank(frame=frame,minTime=minTime,maxTime=maxTime,repeated=repeat,usernameStr=userr,passwordStr=passw,weapNum=weapNumber,weapPrice=weapPricee,bankPreference=bankPref)
+    autoBank(framed=frame,minTime=minTime,maxTime=maxTime,repeated=repeat,usernameStr=userr,passwordStr=passw,weapNum=weapNumber,weapPrice=weapPricee,bankPreference=bankPref)
 
 #grabbing data from user
 def actuallyGrabbing():
@@ -43,16 +43,13 @@ def actuallyGrabbing():
     return userr,passw,minTime,maxTime,repeat
     
     
-def autoBank(frame,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,weapPrice,bankPreference):
-        Label(frame, fg='yellow', bg='black', text="this was minTime: " + str(minTime) ).place(x= 120, y = 175)
+def autoBank(framed,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,weapPrice,bankPreference):
+        oldText=''
         for i in range(repeated):
-
             #login Process
             browser = webdriver.Chrome()
-            browser.get(('http://Kingsofchaos.com'))
-            Label(frame, fg='yellow', bg='black', text="this was minTime: " + str(minTime) ).place(x= 120, y = 175)
-            
-            time.sleep(9)
+            browser.get(('http://Kingsofchaos.com')))
+            time.sleep(4)
             username = browser.find_element_by_name('usrname')
             browser.find_element_by_name('usrname').click();
             username.send_keys(usernameStr)
@@ -107,8 +104,12 @@ def autoBank(frame,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,wea
                     purchaseField = browser.find_element_by_name('buy_weapon['+str(weapNum)+']')
                     purchaseField.clear()
                     purchaseField.send_keys(amount2buy)
-
-
+                    newText="You Purchased: " + str(amount2buy) + ' weapons. With '+ goldString + ' gold. '
+                    displayText= oldText+newText
+                    Label(framed, fg='yellow', bg='black', text= displayText).place(x= 120, y = 175)
+                    framed.update()
+                    oldText=displayText
+                    
             PurchaseButton = browser.find_element_by_name('buybut')
             PurchaseButton.click()
             #Change this value to something real high when trouble shooting to avoid multiple logins.
@@ -119,7 +120,7 @@ def autoBank(frame,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,wea
             i=i+1
             #Random time range to perform banking
             waitTime=random.randrange(minTime,maxTime)
-            print(waitTime / 60)
+            print('sleepng')
             time.sleep(waitTime)
 
 
