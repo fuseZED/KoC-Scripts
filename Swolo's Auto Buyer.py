@@ -28,9 +28,7 @@ def grabInfo2(weapNumber,weapPricee,frame):
     userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
     minTime=int(minTime)
     maxTime=int(maxTime)
-    repeat=int(repeat)
-    #Label(frame, fg='yellow', bg='black', text="this was minTime: " + str(minTime) ).place(x= 120, y = 175)
-    
+    repeat=int(repeat) 
     autoBank(framed=frame,minTime=minTime,maxTime=maxTime,repeated=repeat,usernameStr=userr,passwordStr=passw,weapNum=weapNumber,weapPrice=weapPricee,bankPreference=bankPref)
 
 #grabbing data from user
@@ -48,8 +46,8 @@ def autoBank(framed,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,we
         for i in range(repeated):
             #login Process
             browser = webdriver.Chrome()
-            browser.get(('http://Kingsofchaos.com')))
-            time.sleep(4)
+            browser.get(('http://Kingsofchaos.com'))
+            time.sleep(2)
             username = browser.find_element_by_name('usrname')
             browser.find_element_by_name('usrname').click();
             username.send_keys(usernameStr)
@@ -61,13 +59,14 @@ def autoBank(framed,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,we
             loginButton[2].click()
 
             #Sleep to make sure selenium doesnt break
-            time.sleep(4)
+            time.sleep(2)
 
             #Navigating to armory
 
             browser.get(('http://Kingsofchaos.com/armory.php'))
             
             if bankPreference==0:
+                    #Clears pre selected in-game armory settings
                     attackField = browser.find_element_by_name('prefs[attack]')
                     attackField.clear()
                     attackField.send_keys('0')
@@ -87,7 +86,7 @@ def autoBank(framed,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,we
                     #also better handled by just calling bankUpdate() but you didnt think about anything ahead of time.
 
             
-                    time.sleep(4)
+                    time.sleep(2)
                     content = browser.page_source
 
                     #Scraping html for gold table
@@ -113,7 +112,7 @@ def autoBank(framed,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,we
             PurchaseButton = browser.find_element_by_name('buybut')
             PurchaseButton.click()
             #Change this value to something real high when trouble shooting to avoid multiple logins.
-            time.sleep(4)
+            time.sleep(2)
             
             browser.close()
            
@@ -163,7 +162,7 @@ mb["menu"]=mb.menu
 mb.menu.add_command(label="Knife",command=lambda: grabInfo2(3,1000,master))
 mb.menu.add_command(label="Chariot",command=lambda: grabInfo2(72,450000,master))
 mb.menu.add_command(label="Black Powder Missile",command=lambda: grabInfo2(70,1000000,master))
-mb.menu.add_command(label="DragonSkin",command=lambda: grabInfo2(51,200000))
+mb.menu.add_command(label="DragonSkin",command=lambda: grabInfo2(51,200000,master))
 mb.menu.add_command(label="Invisibility Shield",command=lambda: grabInfo2(71,1000000,master))
 mb.menu.add_command(label="Nunchaku",command=lambda: grabInfo2(75,1000000,master))
 mb.menu.add_command(label="Lookout Tower",command=lambda: grabInfo2(74,1000000,master))
