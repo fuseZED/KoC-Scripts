@@ -9,6 +9,10 @@ import time
 import random
 """
     To do list:
+      Structure: Create: Login()
+                         armoryPrefPurchase()
+                         choicePurchase()
+                         
       display: Amount of gold on login
                Amount of x tool purchased
                Time between banks
@@ -19,13 +23,15 @@ import random
                                    Once that string is created its displayed in displaybox. It gets saved as oldString, next iteration is oldString+newString"""
     
 #unpacking user input from actuallyGrabbing()then running AutoBank()
-def grabInfo2(weapNumber,weapPricee):
+def grabInfo2(weapNumber,weapPricee,frame):
     bankPref=CheckVar.get()
     userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
     minTime=int(minTime)
     maxTime=int(maxTime)
     repeat=int(repeat)
-    autoBank(minTime=minTime,maxTime=maxTime,repeated=repeat,usernameStr=userr,passwordStr=passw,weapNum=weapNumber,weapPrice=weapPricee,bankPreference=bankPref)
+    #Label(frame, fg='yellow', bg='black', text="this was minTime: " + str(minTime) ).place(x= 120, y = 175)
+    
+    autoBank(frame=frame,minTime=minTime,maxTime=maxTime,repeated=repeat,usernameStr=userr,passwordStr=passw,weapNum=weapNumber,weapPrice=weapPricee,bankPreference=bankPref)
 
 #grabbing data from user
 def actuallyGrabbing():
@@ -37,13 +43,16 @@ def actuallyGrabbing():
     return userr,passw,minTime,maxTime,repeat
     
     
-def autoBank(minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,weapPrice,bankPreference):
+def autoBank(frame,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,weapPrice,bankPreference):
+        Label(frame, fg='yellow', bg='black', text="this was minTime: " + str(minTime) ).place(x= 120, y = 175)
         for i in range(repeated):
 
             #login Process
             browser = webdriver.Chrome()
             browser.get(('http://Kingsofchaos.com'))
-            time.sleep(4)
+            Label(frame, fg='yellow', bg='black', text="this was minTime: " + str(minTime) ).place(x= 120, y = 175)
+            
+            time.sleep(9)
             username = browser.find_element_by_name('usrname')
             browser.find_element_by_name('usrname').click();
             username.send_keys(usernameStr)
@@ -147,17 +156,16 @@ maxBox.grid(row=4,column=1)
 timeBox=Entry(master)
 timeBox.grid(row=5, column=1)
 
-
 mb = Menubutton(master, text='Select Weapon to bank')
 mb.menu=Menu(mb)
 mb["menu"]=mb.menu
-mb.menu.add_command(label="Knife",command=lambda: grabInfo2(3,1000))
-mb.menu.add_command(label="Chariot",command=lambda: grabInfo2(72,450000))
-mb.menu.add_command(label="Black Powder Missile",command=lambda: grabInfo2(70,1000000))
+mb.menu.add_command(label="Knife",command=lambda: grabInfo2(3,1000,master))
+mb.menu.add_command(label="Chariot",command=lambda: grabInfo2(72,450000,master))
+mb.menu.add_command(label="Black Powder Missile",command=lambda: grabInfo2(70,1000000,master))
 mb.menu.add_command(label="DragonSkin",command=lambda: grabInfo2(51,200000))
-mb.menu.add_command(label="Invisibility Shield",command=lambda: grabInfo2(71,1000000))
-mb.menu.add_command(label="Nunchaku",command=lambda: grabInfo2(75,1000000))
-mb.menu.add_command(label="Lookout Tower",command=lambda: grabInfo2(74,1000000))
+mb.menu.add_command(label="Invisibility Shield",command=lambda: grabInfo2(71,1000000,master))
+mb.menu.add_command(label="Nunchaku",command=lambda: grabInfo2(75,1000000,master))
+mb.menu.add_command(label="Lookout Tower",command=lambda: grabInfo2(74,1000000,master))
 
 mb.grid(row=7,column=1)
 
