@@ -1,4 +1,3 @@
-#autoBanker CLEANED
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -15,14 +14,6 @@ import random
                Time until next bank.
       Fix current sleep with loop.
 """
-def weapFill(webDriver,weapNumber,goldString, amount2buy):
-    #
-    purchaseField = webDriver.find_element_by_name('buy_weapon['+str(weapNumber)+']')
-    purchaseField.clear()
-    purchaseField.send_keys(amount2buy)
-    return webDriver
-
-
 def main(weapNumber,weapPricee,frame):
     bankPref=CheckVar.get()
     userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
@@ -57,6 +48,11 @@ def main(weapNumber,weapPricee,frame):
         print('sleepng')
         time.sleep(waitTime)
 
+def weapFill(webDriver,weapNumber,goldString, amount2buy):
+    purchaseField = webDriver.find_element_by_name('buy_weapon['+str(weapNumber)+']')
+    purchaseField.clear()
+    purchaseField.send_keys(amount2buy)
+    return webDriver
 
 #grabbing data from user
 def actuallyGrabbing():
@@ -66,11 +62,11 @@ def actuallyGrabbing():
     userr=userEnt.get()
     passw=passEnt.get()
     return userr,passw,minTime,maxTime,repeat
+#scrapes then parses html for gold on hand
 def getGold(webDriver,weapPrice):
     content = webDriver.page_source
     soup = BeautifulSoup(content, "lxml")
     table = soup.find("td", attrs={"class":"menu_cell_repeater_vert"})
-    #Parsing table and manipulating string to get amount of gold
     tableRow = table.find("tr")
     goldString = (tableRow.get_text())
     goldString=(goldString[31:])
@@ -79,6 +75,7 @@ def getGold(webDriver,weapPrice):
     amount2buy = (int(goldString)//weapPrice)
     return amount2buy,goldString
 
+#logs user into KoC
 def login(usernameStr,passwordStr):
     browser = webdriver.Chrome()
     browser.get(('http://Kingsofchaos.com'))
@@ -86,16 +83,14 @@ def login(usernameStr,passwordStr):
     username = browser.find_element_by_name('usrname')
     browser.find_element_by_name('usrname').click();
     username.send_keys(usernameStr)
-
     password = browser.find_element_by_name('peeword')
-
     password.send_keys(passwordStr)
     loginButton = browser.find_elements_by_class_name('login_input')
     loginButton[2].click()
     return browser
-
     #Sleep to make sure selenium doesnt break
     time.sleep(4)
+
 def armoryClear(webDriver):
     attackField = webDriver.find_element_by_name('prefs[attack]')
     attackField.clear()
@@ -112,7 +107,6 @@ def armoryClear(webDriver):
     updateButton = webDriver.find_element_by_xpath('/html/body/table[2]/tbody/tr/td[2]/p[3]/table/tbody/tr/td[1]/form/table/tbody/tr[6]/td/input')
     updateButton.click()
     return webDriver
-
 
 ##################################################################################
 ##################################################################################
