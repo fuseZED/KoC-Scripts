@@ -15,6 +15,13 @@ import random
                Time until next bank.
       Fix current sleep with loop.
 """
+def weapFill(webDriver,weapNumber,goldString, amount2buy):
+    #
+    purchaseField = webDriver.find_element_by_name('buy_weapon['+str(weapNumber)+']')
+    purchaseField.clear()
+    purchaseField.send_keys(amount2buy)
+    return webDriver
+
 
 def main(weapNumber,weapPricee,frame):
     bankPref=CheckVar.get()
@@ -30,11 +37,7 @@ def main(weapNumber,weapPricee,frame):
                 browser=armoryClear(webDriver=browser)
                 time.sleep(4)
                 amount2buy,goldString=getGold(webDriver=browser,weapPrice=weapPricee)
-                print(amount2buy)
-                #navigating armory and purchasing weapons
-                purchaseField = browser.find_element_by_name('buy_weapon['+str(weapNumber)+']')
-                purchaseField.clear()
-                purchaseField.send_keys(amount2buy)
+                browser=weapFill(webDriver=browser,weapNumber=weapNumber,goldString=goldString, amount2buy=amount2buy)
                 newText="You Purchased: " + str(amount2buy) + ' weapons, with '+ goldString + ' gold. '
                 displayText= oldText+newText
                 Label(frame, fg='yellow', bg='black', text= displayText).place(x= 120, y = 175)
