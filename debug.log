@@ -21,3 +21,5 @@
 [1121/193835.198:ERROR:exception_snapshot_win.cc(88)] thread ID 527676 not found in process
 [1121/193835.198:ERROR:process_reader_win.cc(123)] NtOpenThread: An invalid Client ID was specified. (0xc000000b)
 [1121/193835.198:ERROR:exception_snapshot_win.cc(88)] thread ID 527604 not found in process
+[1122/092046.432:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
+[1122/092046.434:ERROR:exception_snapshot_win.cc(88)] thread ID 512408 not found in process
