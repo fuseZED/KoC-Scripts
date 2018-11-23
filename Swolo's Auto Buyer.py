@@ -15,7 +15,7 @@ import random
                Time until next bank.
       Fix current sleep with loop.
 """
-    
+
 def main(weapNumber,weapPricee,frame):
     bankPref=CheckVar.get()
     userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
@@ -40,21 +40,21 @@ def main(weapNumber,weapPricee,frame):
                 Label(frame, fg='yellow', bg='black', text= displayText).place(x= 120, y = 175)
                 frame.update()
                 oldText=displayText
-                    
+
         PurchaseButton = browser.find_element_by_name('buybut')
         PurchaseButton.click()
         #Change this value to something real high when trouble shooting to avoid multiple logins.
         time.sleep(4)
-            
+
         browser.close()
-           
+
         i=i+1
         #Random time range to perform banking
         waitTime=random.randrange(minTime,maxTime)
         print('sleepng')
         time.sleep(waitTime)
-    
-    
+
+
 #grabbing data from user
 def actuallyGrabbing():
     minTime=minBox.get()
@@ -83,16 +83,16 @@ def login(usernameStr,passwordStr):
     username = browser.find_element_by_name('usrname')
     browser.find_element_by_name('usrname').click();
     username.send_keys(usernameStr)
-            
+
     password = browser.find_element_by_name('peeword')
-            
+
     password.send_keys(passwordStr)
     loginButton = browser.find_elements_by_class_name('login_input')
     loginButton[2].click()
     return browser
 
     #Sleep to make sure selenium doesnt break
-    time.sleep(4)    
+    time.sleep(4)
 def armoryClear(webDriver):
     attackField = webDriver.find_element_by_name('prefs[attack]')
     attackField.clear()
@@ -108,10 +108,10 @@ def armoryClear(webDriver):
     sentryField.send_keys('0')
     updateButton = webDriver.find_element_by_xpath('/html/body/table[2]/tbody/tr/td[2]/p[3]/table/tbody/tr/td[1]/form/table/tbody/tr[6]/td/input')
     updateButton.click()
-    return webDriver  
-    
+    return webDriver
 
-##################################################################################            
+
+##################################################################################
 ##################################################################################
 #################                                              ###################
 #################          Evertyhing below this is UI         ###################
@@ -119,7 +119,7 @@ def armoryClear(webDriver):
 ##################################################################################
 ##################################################################################
 
-#main window         
+#main window
 master=Tk()
 master.title("Swolo's Auto Buyer")
 master.geometry("450x200")
@@ -138,7 +138,7 @@ passEnt.grid(row=1, column=1)
 minBox = Entry(master)
 minBox.grid(row =3, column = 1)
 maxBox = Entry(master)
-maxBox.grid(row=4,column=1) 
+maxBox.grid(row=4,column=1)
 timeBox=Entry(master)
 timeBox.grid(row=5, column=1)
 #dropdown menu creation
@@ -159,4 +159,3 @@ checkBox = Checkbutton(master, text = "Use Current Armory Settings", variable = 
 checkBox.grid(row=6, column=1)
 
 master.mainloop()
-
