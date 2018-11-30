@@ -14,6 +14,35 @@ import random
                Time until next bank.
       Fix current sleep with loop.
 """
+def wizard(frame):
+    i=0
+    bankRound=0
+    userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
+    browser=login(usernameStr=userr,passwordStr=passw)
+    browser.get(('http://Kingsofchaos.com/conquest.php'))
+    wizardButton = browser.find_element_by_xpath('/html/body/table[2]/tbody/tr/td[2]/p/table/tbody/tr[10]/td[3]/table/tbody/tr/td[2]/input')
+    wizardButton.click()
+    time.sleep(2)
+    #for some reason the Xpath changes after the first click. This gets first click out of the way then finishes the run.
+    for i in range(99):
+        wizardButton = browser.find_element_by_xpath('//html/body/table[2]/tbody/tr/td[2]/table[2]/tbody/tr[10]/td[3]/table/tbody/tr/td[2]/input')
+        wizardButton.click()
+        time.sleep(2)
+        i=i+i
+        bankRound=bankRound+1
+        if bankRound % 5 == 0:
+            browser.get(('http://Kingsofchaos.com/armory.php'))
+            time.sleep(2)
+            PurchaseButton = browser.find_element_by_name('buybut')
+            time.sleep(2)
+            PurchaseButton.click()
+            browser.get(('http://Kingsofchaos.com/conquest.php'))
+            #uses first xpath again, before returning to loop with second xpath
+            wizardButton = browser.find_element_by_xpath('/html/body/table[2]/tbody/tr/td[2]/p/table/tbody/tr[10]/td[3]/table/tbody/tr/td[2]/input')
+            wizardButton.click()
+            bankRound=bankRound+1
+                        
+    
 def main(weapNumber,weapPricee,frame):
     bankPref=CheckVar.get()
     userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
@@ -150,6 +179,9 @@ mb.menu.add_command(label="Invisibility Shield",command=lambda: main(71,1000000,
 mb.menu.add_command(label="Nunchaku",command=lambda: main(75,1000000,master))
 mb.menu.add_command(label="Lookout Tower",command=lambda: main(74,1000000,master))
 mb.grid(row=7,column=1)
+
+wizardButton = Button(master, text="Wizard!", command=lambda: wizard(master))
+wizardButton.grid(row=8,column=1)
 #Checkbox implementation
 CheckVar = IntVar()
 checkBox = Checkbutton(master, text = "Use Current Armory Settings", variable = CheckVar, onvalue = 1, offvalue = 0,)
