@@ -41,6 +41,7 @@ def wizard(frame):
             #uses first xpath again, before returning to loop with second xpath
             wizardButton = browser.find_element_by_xpath('/html/body/table[2]/tbody/tr/td[2]/p/table/tbody/tr[10]/td[3]/table/tbody/tr/td[2]/input')
             wizardButton.click()
+            time.sleep(2)
             bankRound=bankRound+1
                         
     
