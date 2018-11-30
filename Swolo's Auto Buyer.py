@@ -23,13 +23,14 @@ def wizard(frame):
     wizardButton = browser.find_element_by_xpath('/html/body/table[2]/tbody/tr/td[2]/p/table/tbody/tr[10]/td[3]/table/tbody/tr/td[2]/input')
     wizardButton.click()
     time.sleep(2)
-    #for some reason the Xpath changes after the first click. This gets first click out of the way then finishes the run.
+    #xpath changes after first click due to HTML on page changing
     for i in range(99):
         wizardButton = browser.find_element_by_xpath('//html/body/table[2]/tbody/tr/td[2]/table[2]/tbody/tr[10]/td[3]/table/tbody/tr/td[2]/input')
         wizardButton.click()
         time.sleep(2)
         i=i+i
         bankRound=bankRound+1
+        #banks your gold every 5th conquest. Currently uses armory settings.
         if bankRound % 5 == 0:
             browser.get(('http://Kingsofchaos.com/armory.php'))
             time.sleep(2)
