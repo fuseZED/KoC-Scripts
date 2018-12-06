@@ -1,5 +1,5 @@
 # KoC-Scripts
-Auto Banker for text based MMORPG 'KingsOfChaos'.
+Various automated scripts for text based MMORPG 'KingsOfChaos'.
 
 Written in Python 3.
 
