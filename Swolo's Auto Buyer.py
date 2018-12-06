@@ -14,6 +14,23 @@ import random
                Time until next bank.
       Fix current sleep with loop.
 """
+def sellCatch(frame):
+    userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
+    browser=login(usernameStr=userr,passwordStr=passw)
+    browser.get(('http://Kingsofchaos.com/battlefield.php'))
+    content = browser.page_source
+    soup = BeautifulSoup(content, "lxml")
+    table = soup.find("td", attrs={"class":"menu_cell_repeater_vert"})
+    print(table)
+    tableRow = table.find("tr")
+    goldString = (tableRow.get_text())
+    goldString=(goldString[31:])
+    goldString=goldString[:-19]
+    goldString = goldString.replace(',', '')
+    print(goldString)
+    
+    
+    
 def wizard(frame):
     i=0
     bankRound=0
@@ -184,6 +201,8 @@ mb.grid(row=7,column=1)
 
 wizardButton = Button(master, text="Wizard!", command=lambda: wizard(master))
 wizardButton.grid(row=8,column=1)
+sellButton = Button(master, text="Catch Sells!", command=lambda: sellCatch(master))
+sellButton.grid(row=9,column=1)
 #Checkbox implementation
 CheckVar = IntVar()
 checkBox = Checkbutton(master, text = "Use Current Armory Settings", variable = CheckVar, onvalue = 1, offvalue = 0,)
