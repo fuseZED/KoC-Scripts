@@ -14,6 +14,23 @@ import random
                Time until next bank.
       Fix current sleep with loop
 """
+def sellCatch(frame):
+    userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
+    browser=login(usernameStr=userr,passwordStr=passw)
+    browser.get(('http://Kingsofchaos.com/battlefield.php'))
+    content = browser.page_source
+    soup = BeautifulSoup(content, "lxml")
+    table = soup.find("td", attrs={"class":"menu_cell_repeater_vert"})
+    print(table)
+    tableRow = table.find("tr")
+    goldString = (tableRow.get_text())
+    goldString=(goldString[31:])
+    goldString=goldString[:-19]
+    goldString = goldString.replace(',', '')
+    print(goldString)
+    
+    
+    
 def wizard(frame):
     i=0
     bankRound=0
@@ -23,13 +40,14 @@ def wizard(frame):
     wizardButton = browser.find_element_by_xpath('/html/body/table[2]/tbody/tr/td[2]/p/table/tbody/tr[10]/td[3]/table/tbody/tr/td[2]/input')
     wizardButton.click()
     time.sleep(2)
-    #for some reason the Xpath changes after the first click. This gets first click out of the way then finishes the run.
+    #xpath changes after first click due to HTML on page changing
     for i in range(99):
         wizardButton = browser.find_element_by_xpath('//html/body/table[2]/tbody/tr/td[2]/table[2]/tbody/tr[10]/td[3]/table/tbody/tr/td[2]/input')
         wizardButton.click()
         time.sleep(2)
         i=i+i
         bankRound=bankRound+1
+        #banks your gold every 5th conquest. Currently uses armory settings.
         if bankRound % 5 == 0:
             browser.get(('http://Kingsofchaos.com/armory.php'))
             time.sleep(2)
@@ -40,6 +58,7 @@ def wizard(frame):
             #uses first xpath again, before returning to loop with second xpath
             wizardButton = browser.find_element_by_xpath('/html/body/table[2]/tbody/tr/td[2]/p/table/tbody/tr[10]/td[3]/table/tbody/tr/td[2]/input')
             wizardButton.click()
+            time.sleep(2)
             bankRound=bankRound+1
                         
     
@@ -269,6 +288,8 @@ mb.grid(row=7,column=1)
 
 wizardButton = Button(master, text="Wizard!", command=lambda: wizard(master))
 wizardButton.grid(row=8,column=1)
+sellButton = Button(master, text="Catch Sells!", command=lambda: sellCatch(master))
+sellButton.grid(row=9,column=1)
 #Checkbox implementation
 CheckVar = IntVar()
 checkBox = Checkbutton(master, text = "Use Current Armory Settings", variable = CheckVar, onvalue = 1, offvalue = 0,)
