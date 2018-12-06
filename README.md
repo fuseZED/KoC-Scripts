@@ -1,7 +1,8 @@
 # KoC-Scripts
 Various automated scripts for text based MMORPG 'KingsOfChaos'.
-Current tools: Auto Banker
+Current tools: 
                
+               Auto Banker
                Auto Wizard
                Sell Catcher
                Auto Attacker (incomplete/not stable)
