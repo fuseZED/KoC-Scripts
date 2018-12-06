@@ -15,7 +15,6 @@ for i in range(35):
     html_doc=browser.page_source
     soup = BeautifulSoup(html_doc, "lxml")
     table = soup.find('table', attrs={'class':'table_lines battlefield'})
-
     for row in table.find_all('tr')[2:22]:
         col=row.find_all("td")
         goldString=(col[5].get_text())
@@ -27,7 +26,6 @@ for i in range(35):
                 userID=col[2].find('a').get('href')
                 browser=browser.get('https://www.kingsofchaos.com'+ userID)
                 #NOW DO THE ATTACKING
-                
                 attackButton = browser.find_element_by_name('attackbut')
                 attackButton.click()
     count=count+1
