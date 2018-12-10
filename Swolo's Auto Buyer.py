@@ -54,6 +54,8 @@ def autoAttack(frame):
                         goldString=str(goldString)
                         print('got one! for ' + goldString + ' gold')
             count=count+1
+            i=i+1
+        browser.quit()
 
 
 
@@ -297,7 +299,7 @@ mb.grid(row=9,column=1)
 wizardButton = Button(master, text="Wizard!", command=lambda: wizard(master))
 wizardButton.grid(row=15,column=3)
 sellButton = Button(master, text="Catch Sells!", command=lambda: sellCatch(master))
-sellButton.grid(row=16,column=3)
+sellButton.grid(row=17,column=3)
 attackButton = Button(master, text="Auto Attack!", command=lambda: autoAttack(master))
 attackButton.grid(row=17,column=0)
 #Checkbox implementation
