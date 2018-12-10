@@ -99,6 +99,7 @@ def main(weapNumber,weapPricee,frame):
     for i in range(repeat):
         browser=login(usernameStr=userr,passwordStr=passw)
         browser.get(('http://Kingsofchaos.com/armory.php'))
+        time.sleep(2)
         if bankPref==0:
                 browser=armoryClear(webDriver=browser)
                 time.sleep(4)
@@ -115,12 +116,13 @@ def main(weapNumber,weapPricee,frame):
         #Change this value to something real high when trouble shooting to avoid multiple logins.
         time.sleep(4)
 
-        browser.close()
+        browser.quit()
+
 
         i=i+1
         #Random time range to perform banking
         waitTime=random.randrange(minTime,maxTime)
-        print('sleepng')
+        print('sleeping')
         time.sleep(waitTime)
 
 def weapFill(webDriver,weapNumber,goldString, amount2buy):
@@ -140,88 +142,6 @@ def actuallyGrabbing():
 
     
     
-def autoBank(framed,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,weapPrice,bankPreference):
-        oldText=''
-        for i in range(repeated):
-            #login Process
-            browser = webdriver.Chrome()
-            browser.get(('http://Kingsofchaos.com'))
-            time.sleep(2)
-            username = browser.find_element_by_name('usrname')
-            browser.find_element_by_name('usrname').click();
-            username.send_keys(usernameStr)
-            
-            password = browser.find_element_by_name('peeword')
-            password.send_keys(passwordStr)
-            loginButton = browser.find_elements_by_class_name('login_input')
-            loginButton[2].click()
-
-            #Sleep to make sure selenium doesnt break
-            time.sleep(2)
-
-            #Navigating to armory
-
-            browser.get(('http://Kingsofchaos.com/armory.php'))
-            
-            if bankPreference==0:
-                    #Clears pre selected in-game armory settings
-                    attackField = browser.find_element_by_name('prefs[attack]')
-                    attackField.clear()
-                    attackField.send_keys('0')
-                    defendField = browser.find_element_by_name('prefs[defend]')
-                    defendField.clear()
-                    defendField.send_keys('0')
-                    spyField = browser.find_element_by_name('prefs[spy]')
-                    spyField.clear()
-                    spyField.send_keys('0')
-                    sentryField = browser.find_element_by_name('prefs[sentry]')
-                    sentryField.clear()
-                    sentryField.send_keys('0')
-                    updateButton = browser.find_element_by_xpath('/html/body/table[2]/tbody/tr/td[2]/p[3]/table/tbody/tr/td[1]/form/table/tbody/tr[6]/td/input')
-                    updateButton.click()
-                    #Could this be better handled in a for loop? repeat the find element, clear keys send keys. Just have elemement names in a nameList.
-                    #then do blahblah.findelementbyname(namelist[i])
-                    #also better handled by just calling bankUpdate() but you didnt think about anything ahead of time.
-
-            
-                    time.sleep(2)
-                    content = browser.page_source
-
-                    #Scraping html for gold table
-                    soup = BeautifulSoup(content, "lxml")
-                    table = soup.find("td", attrs={"class":"menu_cell_repeater_vert"})
-                    #Parsing table and manipulating string to get amount of gold
-                    tableRow = table.find("tr")
-                    goldString = (tableRow.get_text())
-                    goldString=(goldString[31:])
-                    goldString=goldString[:-19]
-                    goldString = goldString.replace(',', '')
-                    amount2buy = (int(goldString)//weapPrice)
-                    #navigating armory and purchasing weapons
-                    purchaseField = browser.find_element_by_name('buy_weapon['+str(weapNum)+']')
-                    purchaseField.clear()
-                    purchaseField.send_keys(amount2buy)
-                    newText="You Purchased: " + str(amount2buy) + ' weapons. With '+ goldString + ' gold. \n'
-                    displayText= oldText+newText
-                    Label(framed, fg='yellow', bg='black', text= displayText).place(x= 120, y = 175)
-                    framed.update()
-                    oldText=displayText
-                    
-            PurchaseButton = browser.find_element_by_name('buybut')
-            PurchaseButton.click()
-            #Change this value to something real high when trouble shooting to avoid multiple logins.
-            time.sleep(2)
-            
-            browser.close()
-           
-            i=i+1
-            #Random time range to perform banking
-            waitTime=random.randrange(minTime,maxTime)
-            print('sleepng')
-            time.sleep(waitTime)
-
-
-##################################################################################            
 
 #scrapes then parses html for gold on hand
 def getGold(webDriver,weapPrice):
@@ -240,7 +160,7 @@ def getGold(webDriver,weapPrice):
 def login(usernameStr,passwordStr):
     browser = webdriver.Chrome()
     browser.get(('http://Kingsofchaos.com'))
-    time.sleep(4)
+    time.sleep(6)
     username = browser.find_element_by_name('usrname')
     browser.find_element_by_name('usrname').click();
     username.send_keys(usernameStr)
@@ -250,7 +170,7 @@ def login(usernameStr,passwordStr):
     loginButton[2].click()
     return browser
     #Sleep to make sure selenium doesnt break
-    time.sleep(4)
+    time.sleep(6)
 
 def armoryClear(webDriver):
     attackField = webDriver.find_element_by_name('prefs[attack]')
