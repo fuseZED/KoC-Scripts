@@ -14,6 +14,51 @@ import random
                Time until next bank.
       Fix current sleep with loop
 """
+def autoAttack(frame):
+    userr,passw,minG=autoAttackGrab()
+    browser=login(usernameStr=userr,passwordStr=passw)
+    run =1
+    minG=int(minG)
+    i=0
+    for i in range(3):
+        count = 1
+        while count < 36:
+            pageNum=str(count)
+            browser.get('https://www.kingsofchaos.com/battlefield.php?jump='+ pageNum)
+            html_doc=browser.page_source
+            soup = BeautifulSoup(html_doc, "lxml")
+            table = soup.find('table', attrs={'class':'table_lines battlefield'})
+
+            for row in table.find_all('tr')[2:22]:
+                col=row.find_all("td")
+                allianceString=(col[1].get_text())
+                allianceString=allianceString[7:]
+                goldString=(col[5].get_text())
+                goldString=(goldString[:-5])
+                goldString = goldString.replace(',', '')
+                if goldString != "???":
+                    goldString=int(goldString)
+                    if goldString > minG:
+                            #implement this if statement, implement getTFF(): at top of Autoattack():
+                            #if tffString > currentTFF:
+                        print('Found one')
+                        userID=col[2].find('a').get('href')
+                        browser.get('https://www.kingsofchaos.com'+ userID)
+                        #NOW DO THE ATTACKING
+                        attButton = browser.find_element_by_name('attackbut')
+                        attButton.click()
+                        time.sleep(1)
+                        browser.get(('http://Kingsofchaos.com/armory.php'))
+                        PurchaseButton = browser.find_element_by_name('buybut')
+                        PurchaseButton.click()
+                        goldString=str(goldString)
+                        print('got one! for ' + goldString + ' gold')
+            count=count+1
+
+
+
+    
+    
 def sellCatch(frame):
     userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
     browser=login(usernameStr=userr,passwordStr=passw)
@@ -36,7 +81,6 @@ def sellCatch(frame):
                 goldString=(goldString[:-5])
                 goldString = goldString.replace(',', '')
                 if goldString != "???":
-                    print(goldString)
                     goldString=int(goldString)
                     if goldString > 500000000:
                             if allianceString !="DEMK" and allianceString != "Sweet Revenge":
@@ -141,6 +185,12 @@ def actuallyGrabbing():
     return userr,passw,minTime,maxTime,repeat
 
     
+def autoAttackGrab():
+    userr=userEnt.get()
+    passw=passEnt.get()
+    minG=minGold.get()
+    return userr,passw,minG
+
     
 
 #scrapes then parses html for gold on hand
@@ -201,27 +251,38 @@ def armoryClear(webDriver):
 #main window
 master=Tk()
 master.title("Swolo's Auto Buyer")
-master.geometry("450x200")
+master.geometry("650x350")
 #label creation
-Label(master, text="UserName:").grid(row=0)
-Label(master, text="Password:").grid(row=1)
-Label(master, text="Minimum Time to wait between spending:").grid(row=3)
-Label(master, text="Maximum Time to wait between spending").grid(row=4)
-Label(master, text="Number of times to bank:").grid(row=5)
-Label(master, text="Thats a drop down menu                -->").grid(row=7)
+Label(master, text="Login Information:", fg="blue").grid(row=0, column=1)
+Label(master, text="Auto banker Information:", fg="blue").grid(row=3, column=1)
+Label(master, text="UserName:").grid(row=1)
+Label(master, text="Password:").grid(row=2)
+Label(master, text="Minimum Time to wait between spending:").grid(row=5)
+Label(master, text="Maximum Time to wait between spending").grid(row=6)
+Label(master, text="Number of times to bank:").grid(row=7)
+
+Label(master, text="--------------").grid(row=10, column=0)
+Label(master, text="--------------").grid(row=10, column=1)
+Label(master, text="--------------").grid(row=10, column=3)
+Label(master, text="Auto Attacker Settings:", fg="blue").grid(row=14)
+Label(master, text="Minimum Gold to hit:").grid(row=15)
+Label(master, text="Other Utilities:", fg="blue").grid(row=14, column=3)
+Label(master, text="Made by fuseZED", fg="green").grid(row=16, column=1)
 #inputbox creation
 userEnt = Entry(master)
 passEnt = Entry(master)
-userEnt.grid(row=0, column=1)
-passEnt.grid(row=1, column=1)
+userEnt.grid(row=1, column=3)
+passEnt.grid(row=2, column=3)
 minBox = Entry(master)
-minBox.grid(row =3, column = 1)
+minBox.grid(row =5, column = 3)
 maxBox = Entry(master)
-maxBox.grid(row=4,column=1)
+maxBox.grid(row=6,column=3)
 timeBox=Entry(master)
-timeBox.grid(row=5, column=1)
+timeBox.grid(row=7, column=3)
+minGold = Entry(master)
+minGold.grid(row=16,column=0)
 #dropdown menu creation
-mb = Menubutton(master, text='Select Weapon to bank')
+mb = Menubutton(master, text='Select Weapon to bank (Click me to start AB!)', fg="red")
 mb.menu=Menu(mb)
 mb["menu"]=mb.menu
 mb.menu.add_command(label="Knife",command=lambda: main(3,1000,master))
@@ -231,15 +292,17 @@ mb.menu.add_command(label="DragonSkin",command=lambda: main(51,200000))
 mb.menu.add_command(label="Invisibility Shield",command=lambda: main(71,1000000,master))
 mb.menu.add_command(label="Nunchaku",command=lambda: main(75,1000000,master))
 mb.menu.add_command(label="Lookout Tower",command=lambda: main(74,1000000,master))
-mb.grid(row=7,column=1)
+mb.grid(row=9,column=1)
 
 wizardButton = Button(master, text="Wizard!", command=lambda: wizard(master))
-wizardButton.grid(row=8,column=1)
+wizardButton.grid(row=15,column=3)
 sellButton = Button(master, text="Catch Sells!", command=lambda: sellCatch(master))
-sellButton.grid(row=9,column=1)
+sellButton.grid(row=16,column=3)
+attackButton = Button(master, text="Auto Attack!", command=lambda: autoAttack(master))
+attackButton.grid(row=17,column=0)
 #Checkbox implementation
 CheckVar = IntVar()
 checkBox = Checkbutton(master, text = "Use Current Armory Settings", variable = CheckVar, onvalue = 1, offvalue = 0,)
-checkBox.grid(row=6, column=1)
+checkBox.grid(row=8, column=1)
 
 master.mainloop()
