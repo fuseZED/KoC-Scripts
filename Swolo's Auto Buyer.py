@@ -151,7 +151,7 @@ def main(weapNumber,weapPricee,frame):
                 browser=weapFill(webDriver=browser,weapNumber=weapNumber,goldString=goldString, amount2buy=amount2buy)
                 newText="You Purchased: " + str(amount2buy) + ' weapons, with '+ goldString + ' gold. \n '
                 displayText= oldText+newText
-                Label(frame, fg='yellow', bg='black', text= displayText).place(x= 120, y = 175)
+                #Label(frame, fg='yellow', bg='black', text= displayText).place(x= 120, y = 175)
                 frame.update()
                 oldText=displayText
 
@@ -282,7 +282,7 @@ timeBox.grid(row=7, column=3)
 minGold = Entry(master)
 minGold.grid(row=16,column=0)
 #dropdown menu creation
-mb = Menubutton(master, text='Select Weapon to bank (Click me to start AB!)', fg="red")
+mb = Menubutton(master, text='Select Weapon to bank (CLICK ME TO START AB!)', fg="red")
 mb.menu=Menu(mb)
 mb["menu"]=mb.menu
 mb.menu.add_command(label="Knife",command=lambda: main(3,1000,master))
