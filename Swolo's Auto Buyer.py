@@ -17,18 +17,45 @@ import random
 def sellCatch(frame):
     userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
     browser=login(usernameStr=userr,passwordStr=passw)
-    browser.get(('http://Kingsofchaos.com/battlefield.php'))
-    content = browser.page_source
-    soup = BeautifulSoup(content, "lxml")
-    table = soup.find("td", attrs={"class":"menu_cell_repeater_vert"})
-    print(table)
-    tableRow = table.find("tr")
-    goldString = (tableRow.get_text())
-    goldString=(goldString[31:])
-    goldString=goldString[:-19]
-    goldString = goldString.replace(',', '')
-    print(goldString)
-    
+    run =1
+    while run == 1:
+        count = 1
+        print("loop'd")
+        while count < 42:
+            pageNum=str(count)
+            browser.get('https://www.kingsofchaos.com/battlefield.php?jump='+ pageNum)
+            html_doc=browser.page_source
+            soup = BeautifulSoup(html_doc, "lxml")
+            table = soup.find('table', attrs={'class':'table_lines battlefield'})
+
+            for row in table.find_all('tr')[2:22]:
+                col=row.find_all("td")
+                allianceString=(col[1].get_text())
+                allianceString=allianceString[7:]
+                goldString=(col[5].get_text())
+                goldString=(goldString[:-5])
+                goldString = goldString.replace(',', '')
+                if goldString != "???":
+                    print(goldString)
+                    goldString=int(goldString)
+                    if goldString > 500000000:
+                            if allianceString !="DEMK" and allianceString != "Sweet Revenge":
+                                print('Found one')
+                                userID=col[2].find('a').get('href')
+                                browser.get('https://www.kingsofchaos.com'+ userID)
+                                #NOW DO THE ATTACKING
+                                attButton = browser.find_element_by_name('attackbut')
+                                attButton.click()
+                                time.sleep(1)
+                                browser.get(('http://Kingsofchaos.com/armory.php'))
+                                PurchaseButton = browser.find_element_by_name('buybut')
+                                PurchaseButton.click()
+                                goldString=str(goldString)
+                                print('got one! for ' + goldString + ' gold')
+            count=count+1
+
+
+
     
     
 def wizard(frame):
