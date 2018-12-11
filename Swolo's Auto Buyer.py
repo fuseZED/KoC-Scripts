@@ -9,26 +9,101 @@ import time
 import random
 """
     To do list:
+      Growth Tracker [requires getTFF() and parseTFF()]
       display:
                Time between banks
                Time until next bank.
       Fix current sleep with loop
 """
+def autoAttack(frame):
+    userr,passw,minG=autoAttackGrab()
+    browser=login(usernameStr=userr,passwordStr=passw)
+    run =1
+    minG=int(minG)
+    i=0
+    OwnTFF=getOwnTFF(browser)
+    print(OwnTFF)
+    for i in range(3):
+        count = 1
+        while count < 36:
+            pageNum=str(count)
+            browser.get('https://www.kingsofchaos.com/battlefield.php?jump='+ pageNum)
+            html_doc=browser.page_source
+            soup = BeautifulSoup(html_doc, "lxml")
+            table = soup.find('table', attrs={'class':'table_lines battlefield'})
+
+            for row in table.find_all('tr')[2:22]:
+                col=row.find_all("td")
+                allianceString=(col[1].get_text())
+                allianceString=allianceString[7:]
+                goldString=(col[5].get_text())
+                goldString=(goldString[:-5])
+                goldString = goldString.replace(',', '')
+                tffString=(col[3].get_text())
+                tffString = tffString.replace(',', '')
+                tffString=int(tffString)
+                if goldString != "???":
+                    goldString=int(goldString)
+                    if goldString > minG:
+                        if OwnTFF < tffString:
+                            userID=col[2].find('a').get('href')
+                            browser.get('https://www.kingsofchaos.com'+ userID)
+                            attButton = browser.find_element_by_name('attackbut')
+                            attButton.click()
+                            time.sleep(1)
+                            browser.get(('http://Kingsofchaos.com/armory.php'))
+                            PurchaseButton = browser.find_element_by_name('buybut')
+                            PurchaseButton.click()
+                            goldString=str(goldString)
+                            print('got one! for ' + goldString + ' gold')
+            count=count+1
+            i=i+1
+        browser.quit()
+
+
+
+    
+    
 def sellCatch(frame):
     userr,passw,minTime,maxTime,repeat=actuallyGrabbing()
     browser=login(usernameStr=userr,passwordStr=passw)
-    browser.get(('http://Kingsofchaos.com/battlefield.php'))
-    content = browser.page_source
-    soup = BeautifulSoup(content, "lxml")
-    table = soup.find("td", attrs={"class":"menu_cell_repeater_vert"})
-    print(table)
-    tableRow = table.find("tr")
-    goldString = (tableRow.get_text())
-    goldString=(goldString[31:])
-    goldString=goldString[:-19]
-    goldString = goldString.replace(',', '')
-    print(goldString)
-    
+    run =1
+    while run == 1:
+        count = 1
+        print("loop'd")
+        while count < 42:
+            pageNum=str(count)
+            browser.get('https://www.kingsofchaos.com/battlefield.php?jump='+ pageNum)
+            html_doc=browser.page_source
+            soup = BeautifulSoup(html_doc, "lxml")
+            table = soup.find('table', attrs={'class':'table_lines battlefield'})
+
+            for row in table.find_all('tr')[2:22]:
+                col=row.find_all("td")
+                allianceString=(col[1].get_text())
+                allianceString=allianceString[7:]
+                goldString=(col[5].get_text())
+                goldString=(goldString[:-5])
+                goldString = goldString.replace(',', '')
+                if goldString != "???":
+                    goldString=int(goldString)
+                    if goldString > 500000000:
+                            if allianceString !="DEMK" and allianceString != "Sweet Revenge":
+                                userID=col[2].find('a').get('href')
+                                browser.get('https://www.kingsofchaos.com'+ userID)
+                                #NOW DO THE ATTACKING
+                                attButton = browser.find_element_by_name('attackbut')
+                                attButton.click()
+                                time.sleep(1)
+                                browser.get(('http://Kingsofchaos.com/armory.php'))
+                                PurchaseButton = browser.find_element_by_name('buybut')
+                                PurchaseButton.click()
+                                goldString=str(goldString)
+                                print('got one! for ' + goldString + ' gold')
+            count=count+1
+
+
+
     
     
 def wizard(frame):
@@ -72,6 +147,7 @@ def main(weapNumber,weapPricee,frame):
     for i in range(repeat):
         browser=login(usernameStr=userr,passwordStr=passw)
         browser.get(('http://Kingsofchaos.com/armory.php'))
+        time.sleep(2)
         if bankPref==0:
                 browser=armoryClear(webDriver=browser)
                 time.sleep(4)
@@ -79,7 +155,7 @@ def main(weapNumber,weapPricee,frame):
                 browser=weapFill(webDriver=browser,weapNumber=weapNumber,goldString=goldString, amount2buy=amount2buy)
                 newText="You Purchased: " + str(amount2buy) + ' weapons, with '+ goldString + ' gold. \n '
                 displayText= oldText+newText
-                Label(frame, fg='yellow', bg='black', text= displayText).place(x= 120, y = 175)
+                #Label(frame, fg='yellow', bg='black', text= displayText).place(x= 120, y = 175)
                 frame.update()
                 oldText=displayText
 
@@ -88,12 +164,13 @@ def main(weapNumber,weapPricee,frame):
         #Change this value to something real high when trouble shooting to avoid multiple logins.
         time.sleep(4)
 
-        browser.close()
+        browser.quit()
+
 
         i=i+1
         #Random time range to perform banking
         waitTime=random.randrange(minTime,maxTime)
-        print('sleepng')
+        print('sleeping')
         time.sleep(waitTime)
 
 def weapFill(webDriver,weapNumber,goldString, amount2buy):
@@ -112,89 +189,13 @@ def actuallyGrabbing():
     return userr,passw,minTime,maxTime,repeat
 
     
+def autoAttackGrab():
+    userr=userEnt.get()
+    passw=passEnt.get()
+    minG=minGold.get()
+    return userr,passw,minG
+
     
-def autoBank(framed,minTime, maxTime,repeated,usernameStr,passwordStr,weapNum,weapPrice,bankPreference):
-        oldText=''
-        for i in range(repeated):
-            #login Process
-            browser = webdriver.Chrome()
-            browser.get(('http://Kingsofchaos.com'))
-            time.sleep(2)
-            username = browser.find_element_by_name('usrname')
-            browser.find_element_by_name('usrname').click();
-            username.send_keys(usernameStr)
-            
-            password = browser.find_element_by_name('peeword')
-            password.send_keys(passwordStr)
-            loginButton = browser.find_elements_by_class_name('login_input')
-            loginButton[2].click()
-
-            #Sleep to make sure selenium doesnt break
-            time.sleep(2)
-
-            #Navigating to armory
-
-            browser.get(('http://Kingsofchaos.com/armory.php'))
-            
-            if bankPreference==0:
-                    #Clears pre selected in-game armory settings
-                    attackField = browser.find_element_by_name('prefs[attack]')
-                    attackField.clear()
-                    attackField.send_keys('0')
-                    defendField = browser.find_element_by_name('prefs[defend]')
-                    defendField.clear()
-                    defendField.send_keys('0')
-                    spyField = browser.find_element_by_name('prefs[spy]')
-                    spyField.clear()
-                    spyField.send_keys('0')
-                    sentryField = browser.find_element_by_name('prefs[sentry]')
-                    sentryField.clear()
-                    sentryField.send_keys('0')
-                    updateButton = browser.find_element_by_xpath('/html/body/table[2]/tbody/tr/td[2]/p[3]/table/tbody/tr/td[1]/form/table/tbody/tr[6]/td/input')
-                    updateButton.click()
-                    #Could this be better handled in a for loop? repeat the find element, clear keys send keys. Just have elemement names in a nameList.
-                    #then do blahblah.findelementbyname(namelist[i])
-                    #also better handled by just calling bankUpdate() but you didnt think about anything ahead of time.
-
-            
-                    time.sleep(2)
-                    content = browser.page_source
-
-                    #Scraping html for gold table
-                    soup = BeautifulSoup(content, "lxml")
-                    table = soup.find("td", attrs={"class":"menu_cell_repeater_vert"})
-                    #Parsing table and manipulating string to get amount of gold
-                    tableRow = table.find("tr")
-                    goldString = (tableRow.get_text())
-                    goldString=(goldString[31:])
-                    goldString=goldString[:-19]
-                    goldString = goldString.replace(',', '')
-                    amount2buy = (int(goldString)//weapPrice)
-                    #navigating armory and purchasing weapons
-                    purchaseField = browser.find_element_by_name('buy_weapon['+str(weapNum)+']')
-                    purchaseField.clear()
-                    purchaseField.send_keys(amount2buy)
-                    newText="You Purchased: " + str(amount2buy) + ' weapons. With '+ goldString + ' gold. \n'
-                    displayText= oldText+newText
-                    Label(framed, fg='yellow', bg='black', text= displayText).place(x= 120, y = 175)
-                    framed.update()
-                    oldText=displayText
-                    
-            PurchaseButton = browser.find_element_by_name('buybut')
-            PurchaseButton.click()
-            #Change this value to something real high when trouble shooting to avoid multiple logins.
-            time.sleep(2)
-            
-            browser.close()
-           
-            i=i+1
-            #Random time range to perform banking
-            waitTime=random.randrange(minTime,maxTime)
-            print('sleepng')
-            time.sleep(waitTime)
-
-
-##################################################################################            
 
 #scrapes then parses html for gold on hand
 def getGold(webDriver,weapPrice):
@@ -208,12 +209,23 @@ def getGold(webDriver,weapPrice):
     goldString = goldString.replace(',', '')
     amount2buy = (int(goldString)//weapPrice)
     return amount2buy,goldString
-
+def getOwnTFF(webDriver):
+    webDriver.get(('http://Kingsofchaos.com/train.php'))
+    content = webDriver.page_source
+    trainSoup = BeautifulSoup(content, "lxml")
+    trainTable = trainSoup.find('table', attrs={'class':'table_lines personnel'})
+    for row in trainTable.find_all('tr')[11:]:
+        coll=row.find("td")
+        tffS=(coll.get_text())
+        tffS=tffS[:5]
+        tffS = tffS.replace(',', '')
+        tffS=int(tffS)
+    return tffS
 #logs user into KoC
 def login(usernameStr,passwordStr):
     browser = webdriver.Chrome()
     browser.get(('http://Kingsofchaos.com'))
-    time.sleep(4)
+    time.sleep(6)
     username = browser.find_element_by_name('usrname')
     browser.find_element_by_name('usrname').click();
     username.send_keys(usernameStr)
@@ -223,7 +235,7 @@ def login(usernameStr,passwordStr):
     loginButton[2].click()
     return browser
     #Sleep to make sure selenium doesnt break
-    time.sleep(4)
+    time.sleep(6)
 
 def armoryClear(webDriver):
     attackField = webDriver.find_element_by_name('prefs[attack]')
@@ -243,7 +255,6 @@ def armoryClear(webDriver):
     return webDriver
 
 ##################################################################################
-
 ##################################################################################
 #################                                              ###################
 #################          Evertyhing below this is UI         ###################
@@ -254,27 +265,37 @@ def armoryClear(webDriver):
 #main window
 master=Tk()
 master.title("Swolo's Auto Buyer")
-master.geometry("450x200")
+master.geometry("650x350")
 #label creation
-Label(master, text="UserName:").grid(row=0)
-Label(master, text="Password:").grid(row=1)
-Label(master, text="Minimum Time to wait between spending:").grid(row=3)
-Label(master, text="Maximum Time to wait between spending").grid(row=4)
-Label(master, text="Number of times to bank:").grid(row=5)
-Label(master, text="Thats a drop down menu                -->").grid(row=7)
+Label(master, text="Login Information:", fg="blue").grid(row=0, column=1)
+Label(master, text="Auto banker Information:", fg="blue").grid(row=3, column=1)
+Label(master, text="UserName:").grid(row=1)
+Label(master, text="Password:").grid(row=2)
+Label(master, text="Minimum Time to wait between spending:").grid(row=5)
+Label(master, text="Maximum Time to wait between spending").grid(row=6)
+Label(master, text="Number of times to bank:").grid(row=7)
+Label(master, text="--------------").grid(row=10, column=0)
+Label(master, text="--------------").grid(row=10, column=1)
+Label(master, text="--------------").grid(row=10, column=3)
+Label(master, text="Auto Attacker Settings:", fg="blue").grid(row=14)
+Label(master, text="Minimum Gold to hit:").grid(row=15)
+Label(master, text="Other Utilities:", fg="blue").grid(row=14, column=3)
+Label(master, text="Made by fuseZED", fg="green").grid(row=16, column=1)
 #inputbox creation
 userEnt = Entry(master)
 passEnt = Entry(master)
-userEnt.grid(row=0, column=1)
-passEnt.grid(row=1, column=1)
+userEnt.grid(row=1, column=3)
+passEnt.grid(row=2, column=3)
 minBox = Entry(master)
-minBox.grid(row =3, column = 1)
+minBox.grid(row =5, column = 3)
 maxBox = Entry(master)
-maxBox.grid(row=4,column=1)
+maxBox.grid(row=6,column=3)
 timeBox=Entry(master)
-timeBox.grid(row=5, column=1)
+timeBox.grid(row=7, column=3)
+minGold = Entry(master)
+minGold.grid(row=16,column=0)
 #dropdown menu creation
-mb = Menubutton(master, text='Select Weapon to bank')
+mb = Menubutton(master, text='Select Weapon to bank (CLICK ME TO START AB!)', fg="red")
 mb.menu=Menu(mb)
 mb["menu"]=mb.menu
 mb.menu.add_command(label="Knife",command=lambda: main(3,1000,master))
@@ -284,15 +305,17 @@ mb.menu.add_command(label="DragonSkin",command=lambda: main(51,200000))
 mb.menu.add_command(label="Invisibility Shield",command=lambda: main(71,1000000,master))
 mb.menu.add_command(label="Nunchaku",command=lambda: main(75,1000000,master))
 mb.menu.add_command(label="Lookout Tower",command=lambda: main(74,1000000,master))
-mb.grid(row=7,column=1)
-
+mb.grid(row=9,column=1)
+#buttons
 wizardButton = Button(master, text="Wizard!", command=lambda: wizard(master))
-wizardButton.grid(row=8,column=1)
+wizardButton.grid(row=15,column=3)
 sellButton = Button(master, text="Catch Sells!", command=lambda: sellCatch(master))
-sellButton.grid(row=9,column=1)
+sellButton.grid(row=17,column=3)
+attackButton = Button(master, text="Auto Attack!", command=lambda: autoAttack(master))
+attackButton.grid(row=17,column=0)
 #Checkbox implementation
 CheckVar = IntVar()
 checkBox = Checkbutton(master, text = "Use Current Armory Settings", variable = CheckVar, onvalue = 1, offvalue = 0,)
-checkBox.grid(row=6, column=1)
+checkBox.grid(row=8, column=1)
 
 master.mainloop()
