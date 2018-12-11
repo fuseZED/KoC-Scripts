@@ -9,6 +9,7 @@ import time
 import random
 """
     To do list:
+      Growth Tracker [requires getTFF() and parseTFF()]
       display:
                Time between banks
                Time until next bank.
@@ -20,6 +21,8 @@ def autoAttack(frame):
     run =1
     minG=int(minG)
     i=0
+    OwnTFF=getOwnTFF(browser)
+    print(OwnTFF)
     for i in range(3):
         count = 1
         while count < 36:
@@ -36,23 +39,23 @@ def autoAttack(frame):
                 goldString=(col[5].get_text())
                 goldString=(goldString[:-5])
                 goldString = goldString.replace(',', '')
+                tffString=(col[3].get_text())
+                tffString = tffString.replace(',', '')
+                tffString=int(tffString)
                 if goldString != "???":
                     goldString=int(goldString)
                     if goldString > minG:
-                            #implement this if statement, implement getTFF(): at top of Autoattack():
-                            #if tffString > currentTFF:
-                        print('Found one')
-                        userID=col[2].find('a').get('href')
-                        browser.get('https://www.kingsofchaos.com'+ userID)
-                        #NOW DO THE ATTACKING
-                        attButton = browser.find_element_by_name('attackbut')
-                        attButton.click()
-                        time.sleep(1)
-                        browser.get(('http://Kingsofchaos.com/armory.php'))
-                        PurchaseButton = browser.find_element_by_name('buybut')
-                        PurchaseButton.click()
-                        goldString=str(goldString)
-                        print('got one! for ' + goldString + ' gold')
+                        if OwnTFF < tffString:
+                            userID=col[2].find('a').get('href')
+                            browser.get('https://www.kingsofchaos.com'+ userID)
+                            attButton = browser.find_element_by_name('attackbut')
+                            attButton.click()
+                            time.sleep(1)
+                            browser.get(('http://Kingsofchaos.com/armory.php'))
+                            PurchaseButton = browser.find_element_by_name('buybut')
+                            PurchaseButton.click()
+                            goldString=str(goldString)
+                            print('got one! for ' + goldString + ' gold')
             count=count+1
             i=i+1
         browser.quit()
@@ -86,7 +89,6 @@ def sellCatch(frame):
                     goldString=int(goldString)
                     if goldString > 500000000:
                             if allianceString !="DEMK" and allianceString != "Sweet Revenge":
-                                print('Found one')
                                 userID=col[2].find('a').get('href')
                                 browser.get('https://www.kingsofchaos.com'+ userID)
                                 #NOW DO THE ATTACKING
@@ -207,7 +209,18 @@ def getGold(webDriver,weapPrice):
     goldString = goldString.replace(',', '')
     amount2buy = (int(goldString)//weapPrice)
     return amount2buy,goldString
-
+def getOwnTFF(webDriver):
+    webDriver.get(('http://Kingsofchaos.com/train.php'))
+    content = webDriver.page_source
+    trainSoup = BeautifulSoup(content, "lxml")
+    trainTable = trainSoup.find('table', attrs={'class':'table_lines personnel'})
+    for row in trainTable.find_all('tr')[11:]:
+        coll=row.find("td")
+        tffS=(coll.get_text())
+        tffS=tffS[:5]
+        tffS = tffS.replace(',', '')
+        tffS=int(tffS)
+    return tffS
 #logs user into KoC
 def login(usernameStr,passwordStr):
     browser = webdriver.Chrome()
@@ -242,7 +255,6 @@ def armoryClear(webDriver):
     return webDriver
 
 ##################################################################################
-
 ##################################################################################
 #################                                              ###################
 #################          Evertyhing below this is UI         ###################
@@ -262,7 +274,6 @@ Label(master, text="Password:").grid(row=2)
 Label(master, text="Minimum Time to wait between spending:").grid(row=5)
 Label(master, text="Maximum Time to wait between spending").grid(row=6)
 Label(master, text="Number of times to bank:").grid(row=7)
-
 Label(master, text="--------------").grid(row=10, column=0)
 Label(master, text="--------------").grid(row=10, column=1)
 Label(master, text="--------------").grid(row=10, column=3)
@@ -295,7 +306,7 @@ mb.menu.add_command(label="Invisibility Shield",command=lambda: main(71,1000000,
 mb.menu.add_command(label="Nunchaku",command=lambda: main(75,1000000,master))
 mb.menu.add_command(label="Lookout Tower",command=lambda: main(74,1000000,master))
 mb.grid(row=9,column=1)
-
+#buttons
 wizardButton = Button(master, text="Wizard!", command=lambda: wizard(master))
 wizardButton.grid(row=15,column=3)
 sellButton = Button(master, text="Catch Sells!", command=lambda: sellCatch(master))
