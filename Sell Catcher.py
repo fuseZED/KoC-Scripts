@@ -10,8 +10,8 @@ browser.get(('http://Kingsofchaos.com'))
 time.sleep(15)
 run=1
 while run == 1:
-    count = 9
-    while count < 42:
+    count = 1
+    while count < 32:
         pageNum=str(count)
         browser.get('https://www.kingsofchaos.com/battlefield.php?jump='+ pageNum)
         html_doc=browser.page_source
@@ -25,7 +25,7 @@ while run == 1:
             goldString = goldString.replace(',', '')
             if goldString != "???":
                 goldString=int(goldString)
-                if goldString > 100000000:
+                if goldString > 600000000:
                     userID=col[2].find('a').get('href')
                     browser.get('https://www.kingsofchaos.com'+ userID)
                     #NOW DO THE ATTACKING
@@ -35,7 +35,9 @@ while run == 1:
                     browser.get(('http://Kingsofchaos.com/armory.php'))
                     PurchaseButton = browser.find_element_by_name('buybut')
                     PurchaseButton.click()
-                    print('got one!')
+                    goldString=str(goldString)
+                    print('got one! ' + goldString)
         count=count+1
+
 
 
